@@ -1,1 +1,5 @@
-discord==1.0.1
+git+https://github.com/Rapptz/discord.py@rewrite
+asyncio
+prsaw
+requests
+py-cord
