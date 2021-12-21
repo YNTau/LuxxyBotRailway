@@ -2218,4 +2218,4 @@ async def get_armor_data():
         
     return users  
 
-client.run("ODk5NjAzNzQ2MDI2MzAzNTA5.YW1LRg.i47vDnLgaNhmZZGNbqowT8h5VxE")
+client.run("ODk5NjAzNzQ2MDI2MzAzNTA5.YW1LRg.2bq8lKbwoXPerUrQfn6ZM_DCXy4")
