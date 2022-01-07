@@ -96,8 +96,8 @@ async def loadshop():
 async def about(ctx):
     description = """`Hi, I'm a new coder from Indonesia.
 I'm still learning to make better bots.
-Sorry if this discord bot has bug or not perfect.
-I will try to develop this bot to be better :).
+Sorry if this bot has bug or not perfect.
+I will try to develop this bot to be better.
 You can DM me : BoomerMan#6626`"""
     em = discord.Embed(title="**Message from me**", description = description, color = discord.Color.red())
     await ctx.reply(embed = em)
@@ -163,6 +163,7 @@ async def slot(ctx):
     await uplevel(ctx)
 
 @client.command(description = "Help Command & List Command")
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def help(ctx):
     hlist = []
     with open("prefixes.json", "r") as f:
@@ -743,8 +744,8 @@ async def uronde(ctx, msg):
         if users[str(user.id)]["expboost"] == 1:
             expd = expd * 2
         expd = int(expd)
-        earnings = int(users[str(user.id)]["floor"]) * 200  
-        earnings = int(earnings)
+        earnings = int(users[str(user.id)]["floor"]) * 100
+        earnings = int(earnings) + 100
         em = discord.Embed(title = f"Congratulations, {user.name} you won the match", description = f"{emorupiah}Wallet balance +{earnings} | {emostamina}stamina -10 | {emoexp}exp +{expd}")
         await ctx.send(embed = em)
         users[str(user.id)]["prosesbattle"] = 0
