@@ -1,0 +1,273 @@
+[
+    {
+        "name": "Granma_Soup",
+        "price": 55,
+        "heal": 450,
+        "kategori": "food",
+        "deskripsi": "So delicious that you want to die"
+    },
+    {
+        "name": "MedKit",
+        "price": 48,
+        "heal": 310,
+        "kategori": "food",
+        "deskripsi": "Medical Kit"
+    },
+    {
+        "name": "Beef",
+        "price": 30,
+        "heal": 130,
+        "kategori": "food",
+        "deskripsi": "Luxurious quality delicious roast beef"
+    },
+    {
+        "name": "EXP_Boost",
+        "price": 100,
+        "heal": 0,
+        "kategori": "boost",
+        "deskripsi": "Use this to gain 2x EXP Booster"
+    },
+    {
+        "name": "Bread",
+        "price": 20,
+        "heal": 80,
+        "kategori": "food",
+        "deskripsi": "Delicious Bread"
+    },
+    {
+        "name": "Chocolate",
+        "price": 10,
+        "heal": 35,
+        "kategori": "food",
+        "deskripsi": "Yummy chocolate"
+    },
+    {
+        "name": "Candy",
+        "price": 5,
+        "heal": 16,
+        "kategori": "food",
+        "deskripsi": "Sweet candy"
+    },
+    {
+        "name": "Spartan_Helmets",
+        "price": 180,
+        "bagian": "helmets",
+        "deskripsi": "Protective helmet",
+        "hp": 33,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Spartan_Vest",
+        "price": 435,
+        "bagian": "vest",
+        "deskripsi": "Protective vest",
+        "hp": 66,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Spartan_Leggings",
+        "price": 290,
+        "bagian": "leggings",
+        "deskripsi": "Protective leggings",
+        "hp": 16,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Spartan_Boots",
+        "price": 100,
+        "bagian": "boots",
+        "deskripsi": "Protective boots",
+        "hp": 6,
+        "kategori": "armor",
+        "speed": 8
+    },
+    {
+        "name": "Cruelty_Helmets",
+        "price": 270,
+        "bagian": "helmets",
+        "deskripsi": "Protective helmet",
+        "hp": 60,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Cruelty_Vest",
+        "price": 652,
+        "bagian": "vest",
+        "deskripsi": "Protective vest",
+        "hp": 120,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Cruelty_Leggings",
+        "price": 435,
+        "bagian": "leggings",
+        "deskripsi": "Protective leggings",
+        "hp": 30,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Cruelty_Boots",
+        "price": 152,
+        "bagian": "boots",
+        "deskripsi": "Protective boots",
+        "hp": 12,
+        "kategori": "armor",
+        "speed": 15
+    },
+    {
+        "name": "Fury_Helmets",
+        "price": 405,
+        "bagian": "helmets",
+        "deskripsi": "Protective helmet",
+        "hp": 90,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Fury_Vest",
+        "price": 978,
+        "bagian": "vest",
+        "deskripsi": "Protective vest",
+        "hp": 180,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Fury_Leggings",
+        "price": 652,
+        "bagian": "leggings",
+        "deskripsi": "Protective leggings",
+        "hp": 45,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Fury_Boots",
+        "price": 228,
+        "bagian": "boots",
+        "deskripsi": "Protective boots",
+        "hp": 18,
+        "kategori": "armor",
+        "speed": 22
+    },
+    {
+        "name": "Conqueror_Helmets",
+        "price": 607,
+        "bagian": "helmets",
+        "deskripsi": "Protective helmet",
+        "hp": 134,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Conqueror_Vest",
+        "price": 1468,
+        "bagian": "vest",
+        "deskripsi": "Protective vest",
+        "hp": 270,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Conqueror_Leggings",
+        "price": 978,
+        "bagian": "leggings",
+        "deskripsi": "Protective leggings",
+        "hp": 66,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Conqueror_Boots",
+        "price": 343,
+        "bagian": "boots",
+        "deskripsi": "Protective boots",
+        "hp": 27,
+        "kategori": "armor",
+        "speed": 33
+    },
+    {
+        "name": "Glory_Helmets",
+        "price": 911,
+        "bagian": "helmets",
+        "deskripsi": "Protective helmet",
+        "hp": 201,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Glory_Vest",
+        "price": 2202,
+        "bagian": "vest",
+        "deskripsi": "Protective vest",
+        "hp": 404,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Glory_Leggings",
+        "price": 1468,
+        "bagian": "leggings",
+        "deskripsi": "Protective leggings",
+        "hp": 98,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Glory_Boots",
+        "price": 514,
+        "bagian": "boots",
+        "deskripsi": "Protective boots",
+        "hp": 41,
+        "kategori": "armor",
+        "speed": 50
+    },
+    {
+        "name": "Nemesis_Sword",
+        "price": 255,
+        "damage": 65,
+        "kategori": "sword",
+        "deskripsi": "Battle Sword"
+    },
+    {
+        "name": "Wrath_Sword",
+        "price": 380,
+        "damage": 110,
+        "kategori": "sword",
+        "deskripsi": "Battle Sword"
+    },
+    {
+        "name": "Sharp_Katana",
+        "price": 570,
+        "damage": 170,
+        "kategori": "sword",
+        "deskripsi": "Battle Sword"
+    },
+    {
+        "name": "Demon_Scythe",
+        "price": 860,
+        "damage": 270,
+        "kategori": "sword",
+        "deskripsi": "Battle Sword"
+    },
+    {
+        "name": "Blessed_Sword",
+        "price": 1290,
+        "damage": 425,
+        "kategori": "sword",
+        "deskripsi": "Battle Sword"
+    },
+    {
+        "name": "Glory_Sword",
+        "price": 1930,
+        "damage": 666,
+        "kategori": "sword",
+        "deskripsi": "Battle Sword"
+    }
+]
