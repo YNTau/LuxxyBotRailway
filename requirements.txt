@@ -2,5 +2,5 @@ git+https://github.com/Rapptz/discord.py
 asyncio
 prsaw
 requests
-py-cord
+git+https://github.com/Pycord-Development/pycord
 DiscordUtils
