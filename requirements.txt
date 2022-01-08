@@ -3,3 +3,4 @@ asyncio
 prsaw
 requests
 py-cord
+DiscordUtils

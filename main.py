@@ -10,6 +10,7 @@ import time
 import asyncio
 import requests
 import datetime
+import DiscordUtils
 
 def get_prefix(client,message):
 
@@ -27,7 +28,7 @@ def bagFunc(e):
   return e['name']
 
 client = commands.Bot(
-    command_prefix = get_prefix,
+    command_prefix = [f"{get_prefix}","L ","l "],
     intents = discord.Intents.all())
 
 client.remove_command("help")
