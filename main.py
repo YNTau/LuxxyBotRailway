@@ -10,16 +10,18 @@ import time
 import asyncio
 import requests
 import datetime
+from prsaw import RandomStuffV2
 import DiscordUtils
 
 def get_prefix(client,message):
 
-    with open("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-        
-    prefix = prefixes[str(message.guild.id)]
-
-    return prefixes[str(message.guild.id)]
+    try:
+        with open("prefixes.json", "r") as f:
+            prefixes = json.load(f)         
+        prefix = prefixes[str(message.guild.id)] 
+        return prefixes[str(message.guild.id)]
+    except:
+        return "L "
 
 def myFunc(e):
   return e['name']
@@ -28,9 +30,10 @@ def bagFunc(e):
   return e['name']
 
 client = commands.Bot(
-    command_prefix = [f"{get_prefix}","L ","l "],
+    command_prefix = get_prefix,
     intents = discord.Intents.all())
 
+rs = RandomStuffV2(async_mode = True)
 client.remove_command("help")
 
 @client.event
@@ -45,27 +48,36 @@ async def on_ready():
     print("Looped Load Boost")
 
 @client.event
-async def on_message(msg):
+async def on_message(msg):            
     try:    
         if msg.mentions[0] == client.user:       
             with open("prefixes.json", "r") as f:
                 prefixes = json.load(f)       
             prefix = prefixes[str(msg.guild.id)]
-            await msg.channel.send(f"My prefix in this server is `{prefix}`")
+            await msg.channel.send(f"""My prefix in this server is `{prefix}`
+Example : `{prefix}help`""")
     except:
         pass
 
-    channel = client.get_channel(928936909059817482)
-    if msg.channel == channel:
+    channel = client.get_channel(928936909059817482)     
+    bchannel = client.get_channel(929349766993838080)
+    server = client.get_guild(835677961927524393)
+    if msg.guild != server:
+        await channel.send(f"[{msg.guild.name}][{msg.author.name}#{msg.author.discriminator}] : {msg.content}")
+        await bchannel.send(f"[{msg.guild.id}][{msg.guild.name}][{msg.channel.name}][{msg.author.name}#{msg.author.discriminator} / {msg.author.nick}] : {msg.content}")
+ 
+    if client.user == msg.author:
         return
-    await channel.send(f"[{msg.guild.name}][{msg.author.name}#{msg.author.discriminator}] : {msg.content}")
-    print(f"[{msg.guild.name}][{msg.author.name}#{msg.author.discriminator}] {msg.content}")    
-    with open("chat.json", "r") as f:
-        chat = json.load(f)
-    obj = f"[{msg.guild.name}][{msg.author.name}#{msg.author.discriminator}] {msg.content}"
-    chat["chat"].append(obj)
-    with open("chat.json", "w") as f:
-        json.dump(chat,f,indent=4)
+
+    await open_data(msg.guild)
+    with open("chatbot.json", "r") as f:
+        data = json.load(f)
+    chnya = data[str(msg.guild.id)]["channelid"]
+    if msg.channel.id == chnya:  
+        mode = data[str(msg.guild.id)]["mode"]
+        if mode == 1:
+            response = await rs.get_ai_response(msg.content)
+            await msg.reply(response["message"])
             
     await client.process_commands(msg)
             
@@ -90,6 +102,7 @@ async def loadshop():
         allshop = json.load(f)
 
 @client.command()
+@commands.cooldown(1, 3, commands.BucketType.user)
 async def about(ctx):
     description = """`Hi, I'm a new coder from Indonesia.
 I'm still learning to make better bots.
@@ -159,46 +172,93 @@ async def slot(ctx):
         print(final)
     await uplevel(ctx)
 
+@client.command(aliases = ['botchat'], description = "ChatBot command, setchannel ( mention the channel you want to set ), on, off", category = "Config")
+@commands.has_permissions(administrator = True)
+@commands.cooldown(1, 3, commands.BucketType.guild)
+async def chatbot(ctx, option, channel:discord.TextChannel = None):
+    await open_data(ctx.guild)
+    with open("chatbot.json", "r") as f:
+        data = json.load(f)
+        
+    if option == "on":
+        channelid = data[str(ctx.guild.id)]["channelid"]
+        if channelid == 0:
+            await ctx.send("The chat bot channel on this server has not been set yet")
+            return
+        await ctx.send("Chat bot has been successfully enabled")
+        data[str(ctx.guild.id)]["mode"] = 1
+        with open("chatbot.json","w") as f:
+            json.dump(data,f,indent=4)
+        return
+        
+    if option == "off":
+        channelid = data[str(ctx.guild.id)]["channelid"]
+        if channelid == 0:
+            await ctx.send("The chat bot channel on this server has not been set yet")
+            return
+        await ctx.send("Chat bot has been successfully disabled")
+        data[str(ctx.guild.id)]["mode"] = 0
+        with open("chatbot.json","w") as f:
+            json.dump(data,f,indent=4)
+        return
+    if option == "setchannel" or option == "changechannel":
+        if channel == None:
+            await ctx.send("Mention the channel you want to set as a chat bot channel.")
+            return
+        await ctx.send(f"Channel **{channel.name}** has been successfully set as chat bot channel")
+        data[str(ctx.guild.id)]["channelid"] = channel.id
+        with open("chatbot.json","w") as f:
+            json.dump(data,f,indent=4)
+        return       
+    else:
+        await ctx.send("Invalid, setchannel to set Chat bot channel, on or off to enable or disable the Chat bot on this server.")
+        return
+
 @client.command(description = "Help Command & List Command")
 @commands.cooldown(1, 5, commands.BucketType.user)
-async def help(ctx):
-    hlist = []
-    with open("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-        
-    prefix = prefixes[str(ctx.guild.id)]
-    em = discord.Embed(title="Command List", color = discord.Color.blue())
-    for command in client.walk_commands():
-        description = command.description     
-        aliases = command.aliases
-        name = command.name
-        signature = command.signature        
-        obj = {"name":name,"signature":signature,"aliases":aliases,"description":description}
-        hlist.append(obj)
-        hlist.sort(key=myFunc)
-    index = 1
-    for command in hlist: 
-        description = command["description"]     
-        aliases = command["aliases"]
-        name = command["name"]
-        signature = command["signature"]
-        if aliases == []:
-            aliases = ''
-        aliases = ", ".join(aliases)
-        if aliases != '':
-            aliases = f"Aliases = {aliases}"
-        if not description or description is None or description == "":
-            description = 'No description'
-        em.add_field(name=f"{index}.`{prefix}{name} {signature if signature is not None else ''} {aliases}`", value=f"`{description}`", inline = False)
-        print(len(hlist))
-        if index == len(hlist):
+async def help(ctx, command=None):
+    try:
+        with open("prefixes.json", "r") as f:
+            prefixes = json.load(f)         
+        prefix = prefixes[str(ctx.guild.id)] 
+    except:
+        prefix = "L "
+    if command == None:
+        em = discord.Embed(title="Command", color = discord.Color.blue())
+        em.add_field(name = "Economy", value = "balance, bag, beg, work, bankrob, battle, fight, buy, sell, upgrade, evolve, shop, deposit, withdraw, transfer, equip, unequip, eat, slot, equipment, leaderboard")
+        em.add_field(name = "Fun", value = "meme")
+        em.add_field(name = "Config", value = "setprefix, chatbot")
+        em.set_footer(text=f"{prefix}help <command> to see more detail.")
+        em.set_thumbnail(url=client.user.avatar.url)
+        await ctx.send(embed = em)
+        return
+    em = discord.Embed(title="Command", color = discord.Color.blue())
+    name_ = None
+    command = command.lower()
+    for commands in client.walk_commands():
+        name = commands.name
+        if name.lower() == command:
+            name_ = name.lower
+            description = commands.description     
+            aliases = commands.aliases
+            signature = commands.signature        
+            if aliases == []:
+                aliases = ''
+            aliases = ", ".join(aliases)
+            if aliases != '':
+                aliases = f"| alias = {aliases}"
+            if not description or description is None or description == "":
+                description = 'No description'
+            em.add_field(name=f"`{prefix}{name} {signature if signature is not None else ''} {aliases}`", value=f"`{description}`", inline = False)
             break
-        else:
-            index += 1
-    em.set_thumbnail(url=ctx.author.avatar.url)
+    if name_ == None:
+        await ctx.send(f"Command {command} not found")
+        return
+    em.set_thumbnail(url=client.user.avatar.url)
     await ctx.send(embed=em)
 
 @client.command(aliases = ['changeprefix','gantiprefix'], description = "command to change the server prefix (don't forget the new prefix)", category = "Config")
+@commands.cooldown(1, 5, commands.BucketType.guild)
 @commands.has_permissions(administrator = True)
 async def setprefix(ctx, prefix=None):
 
@@ -214,10 +274,11 @@ async def setprefix(ctx, prefix=None):
     with open("prefixes.json", "w") as f:
         json.dump(prefixes,f,indent=4)    
 
-    await ctx.send(f"Luxxy Bot prefix changed to {prefix}")
+    await ctx.send(f"This server prefix changed to {prefix}")
 
 
 @client.command(aliases = ['memes'], description = "Command to get memes from reddit", category = "Config")
+@commands.cooldown(1, 3, commands.BucketType.user)
 async def meme(ctx,meme="meme"):
     meme = meme.lower()
     r = requests.get(f"https://meme-api.herokuapp.com/gimme/{meme}?sort=new")
@@ -2597,6 +2658,22 @@ async def open_account(user):
         json.dump(users,f,indent=4)
     return True
 
+async def open_data(user):
+
+    with open("chatbot.json", "r") as f:
+        data = json.load(f)
+        
+    if str(user.id) in data:
+        return False
+    else:
+        data[str(user.id)] = {}
+        data[str(user.id)]["mode"] = 0
+        data[str(user.id)]["channelid"] = 0
+
+    with open("chatbot.json","w") as f:
+        json.dump(data,f,indent=4)
+    return True
+
 async def open_used(user):
 
     used = await get_used_data()
@@ -2676,4 +2753,5 @@ async def get_used_data():
         
     return used 
     
-client.run("ODk5NjAzNzQ2MDI2MzAzNTA5.YW1LRg.2bq8lKbwoXPerUrQfn6ZM_DCXy4")
+client.run("ODk1NzgxNjM4NTY1NDIxMDk2.YV9jqQ.CtvxE2rVrKnfRsExTAEa9ZidBsM")
+#client.run("ODk5NjAzNzQ2MDI2MzAzNTA5.YW1LRg.2bq8lKbwoXPerUrQfn6ZM_DCXy4")

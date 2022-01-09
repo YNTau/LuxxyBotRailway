@@ -50,223 +50,223 @@
     },
     {
         "name": "Spartan_Helmets",
-        "price": 180,
+        "price": 500,
         "bagian": "helmets",
         "deskripsi": "Protective helmet",
-        "hp": 33,
-        "kategori": "armor",
-        "speed": 0
-    },
-    {
-        "name": "Spartan_Vest",
-        "price": 435,
-        "bagian": "vest",
-        "deskripsi": "Protective vest",
-        "hp": 66,
-        "kategori": "armor",
-        "speed": 0
-    },
-    {
-        "name": "Spartan_Leggings",
-        "price": 290,
-        "bagian": "leggings",
-        "deskripsi": "Protective leggings",
-        "hp": 16,
-        "kategori": "armor",
-        "speed": 0
-    },
-    {
-        "name": "Spartan_Boots",
-        "price": 100,
-        "bagian": "boots",
-        "deskripsi": "Protective boots",
-        "hp": 6,
-        "kategori": "armor",
-        "speed": 8
-    },
-    {
-        "name": "Cruelty_Helmets",
-        "price": 270,
-        "bagian": "helmets",
-        "deskripsi": "Protective helmet",
-        "hp": 60,
-        "kategori": "armor",
-        "speed": 0
-    },
-    {
-        "name": "Cruelty_Vest",
-        "price": 652,
-        "bagian": "vest",
-        "deskripsi": "Protective vest",
-        "hp": 120,
-        "kategori": "armor",
-        "speed": 0
-    },
-    {
-        "name": "Cruelty_Leggings",
-        "price": 435,
-        "bagian": "leggings",
-        "deskripsi": "Protective leggings",
         "hp": 30,
         "kategori": "armor",
         "speed": 0
     },
     {
-        "name": "Cruelty_Boots",
-        "price": 152,
+        "name": "Spartan_Vest",
+        "price": 1000,
+        "bagian": "vest",
+        "deskripsi": "Protective vest",
+        "hp": 60,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Spartan_Leggings",
+        "price": 250,
+        "bagian": "leggings",
+        "deskripsi": "Protective leggings",
+        "hp": 15,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Spartan_Boots",
+        "price": 200,
         "bagian": "boots",
         "deskripsi": "Protective boots",
         "hp": 12,
         "kategori": "armor",
-        "speed": 15
+        "speed": 10
+    },
+    {
+        "name": "Cruelty_Helmets",
+        "price": 1300,
+        "bagian": "helmets",
+        "deskripsi": "Protective helmet",
+        "hp": 72,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Cruelty_Vest",
+        "price": 2600,
+        "bagian": "vest",
+        "deskripsi": "Protective vest",
+        "hp": 144,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Cruelty_Leggings",
+        "price": 650,
+        "bagian": "leggings",
+        "deskripsi": "Protective leggings",
+        "hp": 36,
+        "kategori": "armor",
+        "speed": 0
+    },
+    {
+        "name": "Cruelty_Boots",
+        "price": 520,
+        "bagian": "boots",
+        "deskripsi": "Protective boots",
+        "hp": 29,
+        "kategori": "armor",
+        "speed": 20
     },
     {
         "name": "Fury_Helmets",
-        "price": 405,
+        "price": 3400,
         "bagian": "helmets",
         "deskripsi": "Protective helmet",
-        "hp": 90,
+        "hp": 173,
         "kategori": "armor",
         "speed": 0
     },
     {
         "name": "Fury_Vest",
-        "price": 978,
+        "price": 6800,
         "bagian": "vest",
         "deskripsi": "Protective vest",
-        "hp": 180,
+        "hp": 346,
         "kategori": "armor",
         "speed": 0
     },
     {
         "name": "Fury_Leggings",
-        "price": 652,
+        "price": 1700,
         "bagian": "leggings",
         "deskripsi": "Protective leggings",
-        "hp": 45,
+        "hp": 85,
         "kategori": "armor",
         "speed": 0
     },
     {
         "name": "Fury_Boots",
-        "price": 228,
+        "price": 1350,
         "bagian": "boots",
         "deskripsi": "Protective boots",
-        "hp": 18,
+        "hp": 70,
         "kategori": "armor",
-        "speed": 22
+        "speed": 30
     },
     {
         "name": "Conqueror_Helmets",
-        "price": 607,
+        "price": 8800,
         "bagian": "helmets",
         "deskripsi": "Protective helmet",
-        "hp": 134,
+        "hp": 415,
         "kategori": "armor",
         "speed": 0
     },
     {
         "name": "Conqueror_Vest",
-        "price": 1468,
+        "price": 17700,
         "bagian": "vest",
         "deskripsi": "Protective vest",
-        "hp": 270,
+        "hp": 830,
         "kategori": "armor",
         "speed": 0
     },
     {
         "name": "Conqueror_Leggings",
-        "price": 978,
+        "price": 4400,
         "bagian": "leggings",
         "deskripsi": "Protective leggings",
-        "hp": 66,
+        "hp": 204,
         "kategori": "armor",
         "speed": 0
     },
     {
         "name": "Conqueror_Boots",
-        "price": 343,
+        "price": 3500,
         "bagian": "boots",
         "deskripsi": "Protective boots",
-        "hp": 27,
+        "hp": 168,
         "kategori": "armor",
-        "speed": 33
+        "speed": 40
     },
     {
         "name": "Glory_Helmets",
-        "price": 911,
+        "price": 23000,
         "bagian": "helmets",
         "deskripsi": "Protective helmet",
-        "hp": 201,
+        "hp": 1000,
         "kategori": "armor",
         "speed": 0
     },
     {
         "name": "Glory_Vest",
-        "price": 2202,
+        "price": 46000,
         "bagian": "vest",
         "deskripsi": "Protective vest",
-        "hp": 404,
+        "hp": 1992,
         "kategori": "armor",
         "speed": 0
     },
     {
         "name": "Glory_Leggings",
-        "price": 1468,
+        "price": 11400,
         "bagian": "leggings",
         "deskripsi": "Protective leggings",
-        "hp": 98,
+        "hp": 490,
         "kategori": "armor",
         "speed": 0
     },
     {
         "name": "Glory_Boots",
-        "price": 514,
+        "price": 9100,
         "bagian": "boots",
         "deskripsi": "Protective boots",
-        "hp": 41,
+        "hp": 403,
         "kategori": "armor",
         "speed": 50
     },
     {
         "name": "Nemesis_Sword",
-        "price": 255,
-        "damage": 65,
+        "price": 1000,
+        "damage": 25,
         "kategori": "sword",
         "deskripsi": "Battle Sword"
     },
     {
         "name": "Wrath_Sword",
-        "price": 380,
-        "damage": 110,
+        "price": 2400,
+        "damage": 65,
         "kategori": "sword",
         "deskripsi": "Battle Sword"
     },
     {
         "name": "Sharp_Katana",
-        "price": 570,
-        "damage": 170,
+        "price": 3400,
+        "damage": 169,
         "kategori": "sword",
         "deskripsi": "Battle Sword"
     },
     {
         "name": "Demon_Scythe",
-        "price": 860,
-        "damage": 270,
+        "price": 8100,
+        "damage": 439,
         "kategori": "sword",
         "deskripsi": "Battle Sword"
     },
     {
         "name": "Blessed_Sword",
-        "price": 1290,
-        "damage": 425,
+        "price": 19400,
+        "damage": 1141,
         "kategori": "sword",
         "deskripsi": "Battle Sword"
     },
     {
         "name": "Glory_Sword",
-        "price": 1930,
-        "damage": 666,
+        "price": 46600,
+        "damage": 2966,
         "kategori": "sword",
         "deskripsi": "Battle Sword"
     }
