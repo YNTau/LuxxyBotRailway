@@ -23,12 +23,6 @@ def get_prefix(client,message):
     except:
         return "L "
 
-def myFunc(e):
-  return e['name']
-  
-def bagFunc(e):
-  return e['name']
-
 client = commands.Bot(
     command_prefix = get_prefix,
     intents = discord.Intents.all())
@@ -36,16 +30,68 @@ client = commands.Bot(
 rs = RandomStuffV2(async_mode = True)
 client.remove_command("help")
 
+curbank = None 
+curarmor = None
+curbot = None
+curuse = None
+
 @client.event
 async def on_ready():
-    print("Ready")
-    staminaup.start()
-    print("Berhasil meloop stamina refill")
     await client.change_presence(activity = discord.Game("Mention if you forget prefix"))
+    users = await get_bank_data()
+    for user in users:
+        users[user]["proseskerja"] = 0
+        users[user]["prosesrampok"] = 0
+        users[user]["prosespenjara"] = 0
+        users[user]["prosesngemis"] = 0
+        with open("mainbank.json","w") as f:
+            json.dump(users,f,indent=4)
+    staminaup.start()
+    print("Looped Stamina Refill")
     loadshop.start()
     print("Looped Load Shop") 
     loadboost.start()
     print("Looped Load Boost")
+    loadbank.start()
+    print("Ready")
+    
+@tasks.loop(seconds=15)
+async def loadbank():
+    global curbank
+    global curarmor
+    global curbot
+    global curuse
+    with open("mainbank.json","r") as f:
+        allbank = json.load(f)
+    with open("armor.json","r") as f:
+        allarmor = json.load(f)
+    with open("chatbot.json","r") as f:
+        allbot = json.load(f)
+    with open("used.json","r") as f:
+        alluse = json.load(f)        
+    channel = client.get_channel(933980105959686155)
+    allbank = json.dumps(allbank, indent=4)
+    if curbank != allbank:    
+        await channel.send(f"""File : mainbank.json
+{allbank}""")
+        curbank = allbank
+    allarmor = json.dumps(allarmor, indent=4)
+    if curarmor != allarmor:
+        await channel.send(f"""File : armor.json
+{allarmor}""")
+        curarmor = allarmor
+    allbot = json.dumps(allbot, indent=4)
+    if curbot != allbot:     
+        await channel.send(f"""File : chatbot.json
+{allbot}""")
+        curbot = allbot
+    alluse = json.dumps(alluse, indent=4)
+    if curuse != alluse:     
+        await channel.send(f"""File : used.json
+{alluse}""")
+        curuse = alluse
+    return  
+
 
 @client.event
 async def on_message(msg):            
@@ -58,13 +104,6 @@ async def on_message(msg):
 Example : `{prefix}help`""")
     except:
         pass
-
-    channel = client.get_channel(928936909059817482)     
-    bchannel = client.get_channel(929349766993838080)
-    server = client.get_guild(835677961927524393)
-    if msg.guild != server:
-        await channel.send(f"[{msg.guild.name}][{msg.author.name}#{msg.author.discriminator}] : {msg.content}")
-        await bchannel.send(f"[{msg.guild.id}][{msg.guild.name}][{msg.channel.name}][{msg.author.name}#{msg.author.discriminator} / {msg.author.nick}] : {msg.content}")
  
     if client.user == msg.author:
         return
@@ -100,17 +139,6 @@ async def loadshop():
     global allshop
     with open("allshop.json","r") as f:
         allshop = json.load(f)
-
-@client.command()
-@commands.cooldown(1, 3, commands.BucketType.user)
-async def about(ctx):
-    description = """`Hi, I'm a new coder from Indonesia.
-I'm still learning to make better bots.
-Sorry if this bot has bug or not perfect.
-I will try to develop this bot to be better.
-You can DM me : BoomerMan#6626`"""
-    em = discord.Embed(title="**Message from me**", description = description, color = discord.Color.red())
-    await ctx.reply(embed = em)
 
 @client.command(aliases = ['lottery','gamble'], description = "Command for slot lottery", category = "Economy")
 @commands.cooldown(1, 120, commands.BucketType.user)
