@@ -12,6 +12,7 @@ import requests
 import datetime
 from prsaw import RandomStuffV2
 import DiscordUtils
+import asyncpg
 
 def get_prefix(client,message):
 
@@ -35,27 +36,67 @@ curarmor = None
 curbot = None
 curuse = None
 
+async def create_db_pool():
+    client.db = await asyncpg.create_pool(dsn = 'postgres://poxcpmeahxczjc:f9a51337d9bf1d5e13fc273a1c45b96e833508d64f4aea38b48feb3bd802ef38@ec2-3-216-113-109.compute-1.amazonaws.com:5432/d4n95ut8m970sc')
+    print("Succes connek")
+    await client.db.execute('CREATE TABLE IF NOT EXISTS database(index serial NOT NULL PRIMARY KEY, mainbank json NOT NULL, armor json NOT NULL, chatbot json NOT NULL, used json NOT NULL)')
+    database = await client.db.fetch('SELECT * FROM database')
+    if not database:
+        await client.db.execute('INSERT INTO database(mainbank,armor,chatbot,used) VALUES ($1,$1,$1,$1)', '{}')
+
 @client.event
 async def on_ready():
     await client.change_presence(activity = discord.Game("Mention if you forget prefix"))
+    maindata = await client.db.fetchrow('SELECT mainbank FROM database WHERE index = $1', 1)
+    maindata = maindata[0]
+    maindata = json.loads(maindata)
+    armor = await client.db.fetchrow('SELECT armor FROM database WHERE index = $1', 1)
+    armor = armor[0]
+    armor = json.loads(armor)    
+    chatbot = await client.db.fetchrow('SELECT chatbot FROM database WHERE index = $1', 1)
+    chatbot = chatbot[0]
+    chatbot = json.loads(chatbot)        
+    used = await client.db.fetchrow('SELECT used FROM database WHERE index = $1', 1)
+    used = used[0]
+    used = json.loads(used)            
     users = await get_bank_data()
-    for user in users:
-        users[user]["proseskerja"] = 0
-        users[user]["prosesrampok"] = 0
-        users[user]["prosespenjara"] = 0
-        users[user]["prosesngemis"] = 0
-        with open("mainbank.json","w") as f:
-            json.dump(users,f,indent=4)
+    users = maindata
+    with open("mainbank.json","w") as f:
+        json.dump(users,f,indent=4)
+    with open("armor.json","r") as f:
+        armors = json.load(f)
+    armors = armor
+    with open("armor.json","w") as f:
+        json.dump(armors,f,indent=4)
+    with open("chatbot.json","r") as f:
+        chatbots = json.load(f)
+    chatbots = chatbot
+    with open("chatbot.json","w") as f:
+        json.dump(chatbots,f,indent=4)        
+    with open("used.json","r") as f:
+        useds = json.load(f)
+    useds = used
+    with open("used.json","w") as f:
+        json.dump(useds,f,indent=4)                
+    try:
+        for user in users:
+            users[user]["proseskerja"] = 0
+            users[user]["prosesrampok"] = 0
+            users[user]["prosespenjara"] = 0
+            users[user]["prosesngemis"] = 0
+            with open("mainbank.json","w") as f:
+                json.dump(users,f,indent=4)
+    except:
+        pass
+
     staminaup.start()
     print("Looped Stamina Refill")
-    loadshop.start()
-    print("Looped Load Shop") 
     loadboost.start()
     print("Looped Load Boost")
     loadbank.start()
     print("Ready")
-    
-@tasks.loop(seconds=15)
+     
+@tasks.loop(seconds=1)
 async def loadbank():
     global curbank
     global curarmor
@@ -75,23 +116,34 @@ async def loadbank():
         await channel.send(f"""File : mainbank.json
 {allbank}""")
         curbank = allbank
+        allbank = json.loads(allbank)
+        allbank = json.dumps(allbank)
+        await client.db.execute('UPDATE database SET mainbank = $1 WHERE "index" = $2', str(allbank), 1)
     allarmor = json.dumps(allarmor, indent=4)
     if curarmor != allarmor:
         await channel.send(f"""File : armor.json
 {allarmor}""")
         curarmor = allarmor
+        allarmor = json.loads(allarmor)
+        allarmor = json.dumps(allarmor)
+        await client.db.execute('UPDATE database SET armor = $1 WHERE "index" = $2', str(allarmor), 1)
     allbot = json.dumps(allbot, indent=4)
     if curbot != allbot:     
         await channel.send(f"""File : chatbot.json
 {allbot}""")
         curbot = allbot
+        allbot = json.loads(allbot)
+        allbot = json.dumps(allbot)
+        await client.db.execute('UPDATE database SET chatbot = $1 WHERE "index" = $2', str(allbot), 1)
     alluse = json.dumps(alluse, indent=4)
     if curuse != alluse:     
         await channel.send(f"""File : used.json
 {alluse}""")
         curuse = alluse
+        alluse= json.loads(alluse)
+        alluse = json.dumps(alluse)
+        await client.db.execute('UPDATE database SET used = $1 WHERE "index" = $2', str(alluse), 1)
     return  
-
 
 @client.event
 async def on_message(msg):            
@@ -133,12 +185,6 @@ async def on_guild_join(guild):
 
 with open("allshop.json","r") as f:
     allshop = json.load(f)
-
-@tasks.loop(seconds=10)
-async def loadshop():
-    global allshop
-    with open("allshop.json","r") as f:
-        allshop = json.load(f)
 
 @client.command(aliases = ['lottery','gamble'], description = "Command for slot lottery", category = "Economy")
 @commands.cooldown(1, 120, commands.BucketType.user)
@@ -1301,13 +1347,16 @@ async def on_command_error(ctx, error):
 @tasks.loop(seconds=100)
 async def staminaup():
     users = await get_bank_data()
-    for user in users:
-        name = int(user)
-        if users[user]["stamina"] >= users[user]["mstamina"]:
-             return
-        users[user]["stamina"] += 1
-        with open("mainbank.json","w") as f:
-            json.dump(users,f,indent=4)
+    try:
+        for user in users:
+            name = int(user)
+            if users[user]["stamina"] >= users[user]["mstamina"]:
+                return
+            users[user]["stamina"] += 1
+            with open("mainbank.json","w") as f:
+                json.dump(users,f,indent=4)
+    except:
+        pass
     
 @client.command(aliases = ['duit','bal','info','uang'], description = "Check your account information", category = "Economy")
 async def balance(ctx, user:discord.Member = None):
@@ -2532,16 +2581,19 @@ async def eat_boost(ctx,item_id):
 @tasks.loop(seconds=1)
 async def loadboost():
     users = await get_bank_data()
-    for user in users:
-        if users[user]["expboost"] == 1:
-            if users[user]["timeboost"] != 0:
-                users[user]["timeboost"] -= 1
-                with open("mainbank.json","w") as f:
-                    json.dump(users,f,indent=4)
-            elif users[user]["timeboost"] == 0:
-                users[user]["expboost"] = 0
-                with open("mainbank.json","w") as f:
-                    json.dump(users,f,indent=4)
+    try:
+        for user in users:
+            if users[user]["expboost"] == 1:
+                if users[user]["timeboost"] != 0:
+                    users[user]["timeboost"] -= 1
+                    with open("mainbank.json","w") as f:
+                        json.dump(users,f,indent=4)
+                elif users[user]["timeboost"] == 0:
+                    users[user]["expboost"] = 0
+                    with open("mainbank.json","w") as f:
+                        json.dump(users,f,indent=4)
+    except:
+        pass
 
 async def eat_this(ctx,item_id,amount):
     emohealth = discord.utils.get(client.emojis, id=926321297972133909)
@@ -2780,5 +2832,7 @@ async def get_used_data():
         used = json.load(f)
         
     return used 
-    
+
+
+client.loop.run_until_complete(create_db_pool()) 
 client.run("ODk5NjAzNzQ2MDI2MzAzNTA5.YW1LRg.HTgc8_fdsyjkrzu47H3yTArU6fc")
