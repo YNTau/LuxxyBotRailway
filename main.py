@@ -37,7 +37,7 @@ curbot = None
 curuse = None
 
 async def create_db_pool():
-    client.db = await asyncpg.create_pool(dsn = 'postgres://poxcpmeahxczjc:f9a51337d9bf1d5e13fc273a1c45b96e833508d64f4aea38b48feb3bd802ef38@ec2-3-216-113-109.compute-1.amazonaws.com:5432/d4n95ut8m970sc')
+    client.db = await asyncpg.create_pool(dsn = 'postgresql://postgres:tPywWc1dxRwjeHKoznf0@containers-us-west-20.railway.app:6968/railway')
     print("Succes connek")
     await client.db.execute('CREATE TABLE IF NOT EXISTS database(index serial NOT NULL PRIMARY KEY, mainbank json NOT NULL, armor json NOT NULL, chatbot json NOT NULL, used json NOT NULL)')
     database = await client.db.fetch('SELECT * FROM database')
