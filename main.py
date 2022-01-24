@@ -14,15 +14,17 @@ from prsaw import RandomStuffV2
 import DiscordUtils
 import asyncpg
 
-def get_prefix(client,message):
-
-    try:
-        with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)         
-        prefix = prefixes[str(message.guild.id)] 
-        return prefixes[str(message.guild.id)]
-    except:
+async def get_prefix(client,message):
+    if not message.guild:
         return "L "
+
+    prefix = await client.db.fetch('SELECT prefix FROM guilds WHERE guild_id = $1', message.guild.id)   
+    if not prefix:
+        await client.db.execute('INSERT INTO guilds(guild_id,prefix) VALUES ($1,$2)', message.guild.id, "L ")
+        prefix = "L "
+    else:
+        prefix = prefix[0].get("prefix")
+    return prefix
 
 client = commands.Bot(
     command_prefix = get_prefix,
@@ -40,6 +42,7 @@ async def create_db_pool():
     client.db = await asyncpg.create_pool(dsn = 'postgresql://postgres:tPywWc1dxRwjeHKoznf0@containers-us-west-20.railway.app:6968/railway')
     print("Succes connek")
     await client.db.execute('CREATE TABLE IF NOT EXISTS database(index serial NOT NULL PRIMARY KEY, mainbank json NOT NULL, armor json NOT NULL, chatbot json NOT NULL, used json NOT NULL)')
+    await client.db.execute('CREATE TABLE IF NOT EXISTS guilds(guild_id BIGINT NOT NULL, prefix TEXT NOT NULL')
     database = await client.db.fetch('SELECT * FROM database')
     if not database:
         await client.db.execute('INSERT INTO database(mainbank,armor,chatbot,used) VALUES ($1,$1,$1,$1)', '{}')
@@ -149,9 +152,7 @@ async def loadbank():
 async def on_message(msg):            
     try:    
         if msg.mentions[0] == client.user:       
-            with open("prefixes.json", "r") as f:
-                prefixes = json.load(f)       
-            prefix = prefixes[str(msg.guild.id)]
+            prefix = await get_prefix(client,msg)
             await msg.channel.send(f"""My prefix in this server is `{prefix}`
 Example : `{prefix}help`""")
     except:
@@ -170,18 +171,7 @@ Example : `{prefix}help`""")
             response = await rs.get_ai_response(msg.content)
             await msg.reply(response["message"])
             
-    await client.process_commands(msg)
-            
-@client.event
-async def on_guild_join(guild):
-
-    with open("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-
-    prefixes[str(guild.id)] = "L "
-
-    with open("prefixes.json", "w") as f:
-        json.dump(prefixes,f,indent=4)
+    await client.process_commands(msg)           
 
 with open("allshop.json","r") as f:
     allshop = json.load(f)
@@ -292,9 +282,7 @@ async def chatbot(ctx, option, channel:discord.TextChannel = None):
 @commands.cooldown(1, 5, commands.BucketType.user)
 async def help(ctx, command=None):
     try:
-        with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)         
-        prefix = prefixes[str(ctx.guild.id)] 
+        prefix = await get_prefix(client,ctx)
     except:
         prefix = "L "
     if command == None:
@@ -331,7 +319,7 @@ async def help(ctx, command=None):
     em.set_thumbnail(url=client.user.avatar.url)
     await ctx.send(embed=em)
 
-@client.command(aliases = ['changeprefix','gantiprefix'], description = "command to change the server prefix (don't forget the new prefix)", category = "Config")
+@client.command(aliases = ['changeprefix','gantiprefix'], description = "command to change the server prefix", category = "Config")
 @commands.cooldown(1, 5, commands.BucketType.guild)
 @commands.has_permissions(administrator = True)
 async def setprefix(ctx, prefix=None):
@@ -340,15 +328,8 @@ async def setprefix(ctx, prefix=None):
         await ctx.send(f"New prefix can't empty!")
         return
 
-    with open("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-
-    prefixes[str(ctx.guild.id)] = prefix
-
-    with open("prefixes.json", "w") as f:
-        json.dump(prefixes,f,indent=4)    
-
-    await ctx.send(f"This server prefix changed to {prefix}")
+    await client.db.execute('UPDATE guilds SET prefix = $1 WHERE "guild_id" = $2', prefix, ctx.guild.id)
+    await ctx.send(f"This server prefix changed to `{prefix}`")
 
 
 @client.command(aliases = ['memes'], description = "Command to get memes from reddit", category = "Config")
