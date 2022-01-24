@@ -5,3 +5,4 @@ requests
 git+https://github.com/Pycord-Development/pycord
 DiscordUtils
 git+https://github.com/CodeWithSwastik/prsaw.git
+asyncpg
