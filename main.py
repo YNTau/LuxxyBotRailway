@@ -1331,11 +1331,10 @@ async def staminaup():
     try:
         for user in users:
             name = int(user)
-            if users[user]["stamina"] >= users[user]["mstamina"]:
-                pass
-            users[user]["stamina"] += 1
-            with open("mainbank.json","w") as f:
-                json.dump(users,f,indent=4)
+            if users[user]["stamina"] <= users[user]["mstamina"]:
+                users[user]["stamina"] += 1
+                with open("mainbank.json","w") as f:
+                    json.dump(users,f,indent=4)
     except:
         pass
     
