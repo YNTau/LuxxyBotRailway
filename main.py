@@ -162,7 +162,10 @@ Example : `{prefix}help`""")
         return
 
     if msg.channel.id == 940237455427268609:
-        userid = int(msg.content)
+        try:
+            userid = int(msg.content)
+        except:
+            return
         user = client.get_user(userid)
         await open_account(user)
         users = await get_bank_data()
@@ -186,6 +189,13 @@ Example : `{prefix}help`""")
 
 with open("allshop.json","r") as f:
     allshop = json.load(f)
+
+@client.command(aliases = ['upvote'], description = "Vote for reward")
+@commands.cooldown(1, 3, commands.BucketType.user)
+async def vote(ctx):
+    emorupiah = discord.utils.get(client.emojis, id=926314665884156004)
+    em = discord.Embed(title = "Vote for Reward", description = f"Vote to **get 500 {emorupiah}coins!**, you can vote **every 12 hours**, want to vote? **https://top.gg/bot/899603746026303509/vote** click that link!")
+    await ctx.send(embed = em)
 
 @client.command(aliases = ['lottery','gamble'], description = "Command for slot lottery", category = "Economy")
 @commands.cooldown(1, 120, commands.BucketType.user)
