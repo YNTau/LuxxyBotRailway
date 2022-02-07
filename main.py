@@ -161,6 +161,17 @@ Example : `{prefix}help`""")
     if client.user == msg.author:
         return
 
+    if msg.channel.id == 940237455427268609:
+        userid = int(msg.content)
+        user = client.get_user(userid)
+        await open_account(user)
+        users = await get_bank_data()
+        users[str(user.id)]["wallet"] += 500
+        with open("mainbank.json","w") as f:
+            json.dump(users,f,indent=4)        
+        await user.send(f"**{user.name}**, Thanks for voting luxxy bot, you just got 500 coins.")
+        return
+
     await open_data(msg.guild)
     with open("chatbot.json", "r") as f:
         data = json.load(f)
