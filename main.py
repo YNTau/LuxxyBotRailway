@@ -98,6 +98,28 @@ async def on_ready():
     print("Looped Load Boost")
     loadbank.start()
     print("Ready")
+
+@client.command(aliases = ['rr'])
+async def replyreport(ctx, userid, *, message):
+    if ctx.author.id != 860735375726346281:
+        return
+    embed = discord.Embed(title = f"Thank you for Reporting", description = f"{message}", color = discord.Color.red)
+    user = client.get_user(userid)
+    await user.send(embed=embed)
+    await ctx.send("The reply report has been sent")
+
+@commands.cooldown(1, 30, commands.BucketType.user)
+@client.command(aliases = ['rep'], description = "Report bug/cheat")
+async def report(ctx, *, report):
+    embed = discord.Embed(title = f"Report from **{ctx.author.name}**", description = f"Report : {report}", color = discord.Color.red)
+    try:
+        embed.set_thumbnail(url=ctx.author.avatar.url)  
+    except:
+        pass 
+    admin = client.get_user(860735375726346281)
+    await admin.send(embed=embed)
+    await admin.send(f"User ID : {ctx.author.id}")
+    await ctx.send("The report has been sent, we will handle your report, thank you for reporting")
      
 @tasks.loop(seconds=1)
 async def loadbank():
@@ -114,17 +136,15 @@ async def loadbank():
     with open("used.json","r") as f:
         alluse = json.load(f)        
     channel = client.get_channel(933980105959686155)
-    allbank = json.dumps(allbank, indent=4)
+    allbank = json.dumps(allbank)
     if curbank != allbank:    
-        await channel.send(f"""File : mainbank.json
+        await channel.send(f"""mainbank.json
 {allbank}""")
         curbank = allbank
-        allbank = json.loads(allbank)
-        allbank = json.dumps(allbank)
         await client.db.execute('UPDATE database SET mainbank = $1 WHERE "index" = $2', str(allbank), 1)
     allarmor = json.dumps(allarmor, indent=4)
     if curarmor != allarmor:
-        await channel.send(f"""File : armor.json
+        await channel.send(f"""armor.json
 {allarmor}""")
         curarmor = allarmor
         allarmor = json.loads(allarmor)
@@ -132,7 +152,7 @@ async def loadbank():
         await client.db.execute('UPDATE database SET armor = $1 WHERE "index" = $2', str(allarmor), 1)
     allbot = json.dumps(allbot, indent=4)
     if curbot != allbot:     
-        await channel.send(f"""File : chatbot.json
+        await channel.send(f"""chatbot.json
 {allbot}""")
         curbot = allbot
         allbot = json.loads(allbot)
@@ -140,7 +160,7 @@ async def loadbank():
         await client.db.execute('UPDATE database SET chatbot = $1 WHERE "index" = $2', str(allbot), 1)
     alluse = json.dumps(alluse, indent=4)
     if curuse != alluse:     
-        await channel.send(f"""File : used.json
+        await channel.send(f"""used.json
 {alluse}""")
         curuse = alluse
         alluse= json.loads(alluse)
@@ -197,7 +217,7 @@ async def vote(ctx):
     em = discord.Embed(title = "Vote for Reward", description = f"Vote to **get 500 {emorupiah}coins!**, you can vote **every 12 hours**, want to vote? **https://top.gg/bot/899603746026303509/vote** click that link!")
     await ctx.send(embed = em)
 
-@client.command(aliases = ['lottery','gamble'], description = "Command for slot lottery", category = "Economy")
+@client.command(aliases = ['gamble'], description = "Command for slot gambling", category = "Economy")
 @commands.cooldown(1, 120, commands.BucketType.user)
 async def slot(ctx):
     emorupiah = discord.utils.get(client.emojis, id=926314665884156004)
@@ -253,7 +273,7 @@ async def slot(ctx):
         dapetexp = random.randrange(20)
         await update_bank(ctx.author,+dapetexp*1, "exp")
         await update_bank(ctx.author,-1*1,"ticket")
-        await ctx.reply(f"You lose, you get {dapetexp} {emoexp}exp.")
+        await ctx.reply(f"You lose, you get {dapetexp}{emoexp}exp.")
         print(final)
     await uplevel(ctx)
 
@@ -311,6 +331,7 @@ async def help(ctx, command=None):
         em.add_field(name = "Economy", value = "balance, bag, beg, work, bankrob, battle, fight, buy, sell, upgrade, evolve, shop, deposit, withdraw, transfer, equip, unequip, eat, slot, equipment, leaderboard")
         em.add_field(name = "Fun", value = "meme")
         em.add_field(name = "Config", value = "setprefix, chatbot")
+        em.add_field(name = "Other", value = "report")
         em.set_footer(text=f"{prefix}help <command> to see more detail.")
         em.set_thumbnail(url=client.user.avatar.url)
         await ctx.send(embed = em)
@@ -497,7 +518,10 @@ async def flawan(ctx, member, bet):
         em.add_field(name = f"{en} Health{emohealth} :", value = f"{ehp}")
         em.add_field(name = f"Attack History :", value = f"{emospeed}Speed ​​*{en}* is faster and has a turn to attack.")
         em.set_image(url=eim)
-        em.set_thumbnail(url=user.avatar.url)
+        try:
+            em.set_thumbnail(url=user.avatar.url)
+        except:
+            pass
         msg = await ctx.send(embed = em)
         await asyncio.sleep(5)
         await feronde(ctx, msg, member, bet)        
@@ -509,7 +533,10 @@ async def flawan(ctx, member, bet):
         em.add_field(name = f"{en} Health{emohealth} :", value = f"{ehp}")
         em.add_field(name = f"Attack History :", value = f"{emospeed}Speed ​​*{user.name}* is faster and has a turn to attack.")
         em.set_image(url=eim)
-        em.set_thumbnail(url=user.avatar.url)
+        try:
+            em.set_thumbnail(url=user.avatar.url)
+        except:
+            pass
         msg = await ctx.send(embed = em)
         await asyncio.sleep(5)
         await furonde(ctx, msg, member, bet)
@@ -553,7 +580,10 @@ async def feronde(ctx, msg, member, bet):
     em.add_field(name = f"{user.name} Health{emohealth} :", value = f"{uhp}")
     em.add_field(name = f"{en} Health{emohealth} :", value = f"{ehp}")
     em.set_image(url=eim)
-    em.set_thumbnail(url=user.avatar.url)
+    try:
+        em.set_thumbnail(url=user.avatar.url)
+    except:
+        pass
     em.add_field(name = f"Attack History :", value = f"{en} attacks {user.name} and deals {emodamage}{reatk} damage!")
     msg = await msg.edit(embed = em)
     await asyncio.sleep(4)
@@ -611,7 +641,10 @@ async def furonde(ctx, msg, member, bet):
     em.add_field(name = f"{user.name} Health{emohealth} :", value = f"{uhp}")
     em.add_field(name = f"{en} Health{emohealth} :", value = f"{ehp}")
     em.set_image(url=eim)
-    em.set_thumbnail(url=user.avatar.url)
+    try:
+        em.set_thumbnail(url=user.avatar.url)
+    except:
+        pass
     em.add_field(name = f"Attack History :", value = f"{user.name} attacks {en} and deals {emodamage}{ruatk} damage!")
     msg = await msg.edit(embed = em)
     await asyncio.sleep(4)
@@ -705,7 +738,10 @@ async def battle(ctx):
     em.add_field(name = f"Enemy {emohealth}Health", value = f"Health : {ehp}")
     em.add_field(name = f"Enemy {emodamage}Damage", value = f"Damage : {etk}")
     em.add_field(name = f"Enemy {emospeed}Speed", value = f"Speed : {esp}")
-    em.set_thumbnail(url=user.avatar.url)
+    try:
+        em.set_thumbnail(url=user.avatar.url)
+    except:
+        pass
     em.set_image(url=eim)
     await ctx.send(embed = em)
 
@@ -744,7 +780,10 @@ async def lawan(ctx):
         em.add_field(name = f"{user.name} Health{emohealth} :", value = f"{uhp}")
         em.add_field(name = f"Attack History :", value = f"{emospeed}Speed ​​*{en}* is faster and has a turn to attack.")
         em.set_image(url=eim)
-        em.set_thumbnail(url=user.avatar.url)
+        try:
+            em.set_thumbnail(url=user.avatar.url)
+        except:
+            pass
         msg = await ctx.send(embed = em)
         await asyncio.sleep(5)
         await eronde(ctx, msg)        
@@ -755,7 +794,10 @@ async def lawan(ctx):
         em.add_field(name = f"{user.name} Health{emohealth} :", value = f"{uhp}")
         em.add_field(name = f"Attack History :", value = f"{emospeed}Speed ​​*{user.name}* is faster and has a turn to attack.")
         em.set_image(url=eim)
-        em.set_thumbnail(url=user.avatar.url)
+        try:
+            em.set_thumbnail(url=user.avatar.url)
+        except:
+            pass
         msg = await ctx.send(embed = em)
         await asyncio.sleep(5)
         await uronde(ctx, msg)
@@ -800,7 +842,10 @@ async def eronde(ctx, msg):
     em.add_field(name = f"{en} Health{emohealth} :", value = f"{ehp}")
     em.add_field(name = f"{user.name} Health{emohealth} :", value = f"{uhp}")
     em.set_image(url=eim)
-    em.set_thumbnail(url=user.avatar.url)
+    try:
+        em.set_thumbnail(url=user.avatar.url)
+    except:
+        pass
     em.add_field(name = f"Attack History :", value = f"{en} attacks {user.name} and deals {emodamage}{reatk} damage!")
     msg = await msg.edit(embed = em)
     await asyncio.sleep(4)
@@ -869,7 +914,10 @@ async def uronde(ctx, msg):
     em.add_field(name = f"{en} Health{emohealth} :", value = f"{ehp}")
     em.add_field(name = f"{user.name} Health{emohealth} :", value = f"{uhp}")
     em.set_image(url=eim)
-    em.set_thumbnail(url=user.avatar.url)
+    try:
+        em.set_thumbnail(url=user.avatar.url)
+    except:
+        pass
     em.add_field(name = f"Attack History :", value = f"{user.name} attacks {en} and deals {emodamage}{ruatk} damage!")
     msg = await msg.edit(embed = em)
     await asyncio.sleep(4)
@@ -1389,7 +1437,7 @@ async def balance(ctx, user:discord.Member = None):
     em = discord.Embed(title = f"**{user.name}** Account Information",color = discord.Color.red())
     em.add_field(name = f"{emorupiah}Wallet",value = dompet)
     em.add_field(name = f"{emorupiah}Bank",value = bank)
-    em.add_field(name = f"{emoticket}Ticket",value = tiket)
+    em.add_field(name = f"{emoticket}Slot Ticket",value = tiket)
     em.add_field(name = f"{emohealth}Health",value = f"{health} / {mhealth}")
     em.add_field(name = f"{emodamage}Damage",value = f"{damage}")
     em.add_field(name = f"{emospeed}Speed",value = f"{speed}")
@@ -1450,7 +1498,6 @@ async def beg(ctx):
     await asyncio.sleep(ngemis)
     kois = [1,2,3]
     bisa = random.choice(kois)
-    print(bisa)
 
     if bisa == 3:
         gagaltext = ["Crazy beggar, go away!","Still young but already begging, work!","Poor!"]
@@ -1473,7 +1520,7 @@ async def beg(ctx):
         expd = random.randrange(5, 10)
         if users[str(user.id)]["expboost"] == 1:
             expd = expd * 2
-        gagaltext = ["I have no money, but i have tickets","I'll give you ticket","Sorry i don't have money but tickets"]
+        gagaltext = ["I have no money, but i have tickets","I'll give you slot ticket","Sorry i don't have money but slot tickets"]
         earnings = random.randrange(1, 2)
         earnings = int(earnings)
         gagalorang = ["Dave Maguire","Alexander","Jack Kruger"]
@@ -2689,7 +2736,10 @@ async def leaderboard(ctx,x = 5):
     for amt in total:
         id_ = leader_board[amt]
         member = client.get_user(id_)
-        name = member.name
+        try:
+            name = member.name
+        except:
+            name = member
         em.add_field(name = f"{index}. {name}" , value = f"{emorupiah}{amt}",  inline = False)
         if index == x:
             break
