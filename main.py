@@ -103,7 +103,7 @@ async def on_ready():
 async def replyreport(ctx, userid, *, message):
     if ctx.author.id != 860735375726346281:
         return
-    embed = discord.Embed(title = f"Thank you for Reporting", description = f"{message}", color = discord.Color.red)
+    embed = discord.Embed(title = f"Thank you for Reporting", description = f"{message}", color = discord.Color.red())
     user = client.get_user(userid)
     await user.send(embed=embed)
     await ctx.send("The reply report has been sent")
@@ -111,7 +111,7 @@ async def replyreport(ctx, userid, *, message):
 @commands.cooldown(1, 30, commands.BucketType.user)
 @client.command(aliases = ['rep'], description = "Report bug/cheat")
 async def report(ctx, *, report):
-    embed = discord.Embed(title = f"Report from **{ctx.author.name}**", description = f"Report : {report}", color = discord.Color.red)
+    embed = discord.Embed(title = f"Report from **{ctx.author.name}**", description = f"Report : {report}", color = discord.Color.red())
     try:
         embed.set_thumbnail(url=ctx.author.avatar.url)  
     except:
