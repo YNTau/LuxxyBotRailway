@@ -104,7 +104,7 @@ async def replyreport(ctx, userid, *, message):
     if ctx.author.id != 860735375726346281:
         return
     embed = discord.Embed(title = f"Thank you for Reporting", description = f"{message}", color = discord.Color.red())
-    user = client.get_user(userid)
+    user = client.get_user(int(userid))
     await user.send(embed=embed)
     await ctx.send("The reply report has been sent")
 
@@ -141,6 +141,8 @@ async def loadbank():
         await channel.send(f"""mainbank.json
 {allbank}""")
         curbank = allbank
+        allbank = json.loads(allbank)
+        allbank = json.dumps(allbank)
         await client.db.execute('UPDATE database SET mainbank = $1 WHERE "index" = $2', str(allbank), 1)
     allarmor = json.dumps(allarmor, indent=4)
     if curarmor != allarmor:
@@ -1408,6 +1410,7 @@ async def staminaup():
         pass
     
 @client.command(aliases = ['duit','bal','info','uang'], description = "Check your account information", category = "Economy")
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def balance(ctx, user:discord.Member = None):
     emorupiah = discord.utils.get(client.emojis, id=926314665884156004)
     emodamage = discord.utils.get(client.emojis, id=926314853658951720)
